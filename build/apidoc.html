@@ -1,0 +1,563 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/Gozala/querystring#readme"
+
+    >querystring (v0.2.0)</a>
+</h1>
+<h4>Node's querystring module for all engines.</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.querystring">module querystring</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.decode">
+            function <span class="apidocSignatureSpan">querystring.</span>decode
+            <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.encode">
+            function <span class="apidocSignatureSpan">querystring.</span>encode
+            <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.parse">
+            function <span class="apidocSignatureSpan">querystring.</span>parse
+            <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.stringify">
+            function <span class="apidocSignatureSpan">querystring.</span>stringify
+            <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">querystring.</span>index</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.querystring.index">module querystring.index</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.index.decode">
+            function <span class="apidocSignatureSpan">querystring.index.</span>decode
+            <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.index.encode">
+            function <span class="apidocSignatureSpan">querystring.index.</span>encode
+            <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.index.parse">
+            function <span class="apidocSignatureSpan">querystring.index.</span>parse
+            <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.querystring.index.stringify">
+            function <span class="apidocSignatureSpan">querystring.index.</span>stringify
+            <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.querystring" id="apidoc.module.querystring">module querystring</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.decode" id="apidoc.element.querystring.decode">
+        function <span class="apidocSignatureSpan">querystring.</span>decode
+        <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">decode = function (qs, sep, eq, options) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  var obj = {};
+
+  if (typeof qs !== &#x27;string&#x27; || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options &#x26;&#x26; typeof options.maxKeys === &#x27;number&#x27;) {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys &#x3c;= 0 means that we should not limit keys count
+  if (maxKeys &#x3e; 0 &#x26;&#x26; len &#x3e; maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i &#x3c; len; ++i) {
+    var x = qs[i].replace(regexp, &#x27;%20&#x27;),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx &#x3e;= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = &#x27;&#x27;;
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.encode" id="apidoc.element.querystring.encode">
+        function <span class="apidocSignatureSpan">querystring.</span>encode
+        <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">encode = function (obj, sep, eq, name) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === &#x27;object&#x27;) {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return &#x27;&#x27;;
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.parse" id="apidoc.element.querystring.parse">
+        function <span class="apidocSignatureSpan">querystring.</span>parse
+        <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">parse = function (qs, sep, eq, options) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  var obj = {};
+
+  if (typeof qs !== &#x27;string&#x27; || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options &#x26;&#x26; typeof options.maxKeys === &#x27;number&#x27;) {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys &#x3c;= 0 means that we should not limit keys count
+  if (maxKeys &#x3e; 0 &#x26;&#x26; len &#x3e; maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i &#x3c; len; ++i) {
+    var x = qs[i].replace(regexp, &#x27;%20&#x27;),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx &#x3e;= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = &#x27;&#x27;;
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.stringify" id="apidoc.element.querystring.stringify">
+        function <span class="apidocSignatureSpan">querystring.</span>stringify
+        <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">stringify = function (obj, sep, eq, name) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === &#x27;object&#x27;) {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return &#x27;&#x27;;
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.querystring.index" id="apidoc.module.querystring.index">module querystring.index</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.index.decode" id="apidoc.element.querystring.index.decode">
+        function <span class="apidocSignatureSpan">querystring.index.</span>decode
+        <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">decode = function (qs, sep, eq, options) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  var obj = {};
+
+  if (typeof qs !== &#x27;string&#x27; || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options &#x26;&#x26; typeof options.maxKeys === &#x27;number&#x27;) {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys &#x3c;= 0 means that we should not limit keys count
+  if (maxKeys &#x3e; 0 &#x26;&#x26; len &#x3e; maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i &#x3c; len; ++i) {
+    var x = qs[i].replace(regexp, &#x27;%20&#x27;),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx &#x3e;= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = &#x27;&#x27;;
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.index.encode" id="apidoc.element.querystring.index.encode">
+        function <span class="apidocSignatureSpan">querystring.index.</span>encode
+        <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">encode = function (obj, sep, eq, name) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === &#x27;object&#x27;) {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return &#x27;&#x27;;
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.index.parse" id="apidoc.element.querystring.index.parse">
+        function <span class="apidocSignatureSpan">querystring.index.</span>parse
+        <span class="apidocSignatureSpan">(qs, sep, eq, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">parse = function (qs, sep, eq, options) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  var obj = {};
+
+  if (typeof qs !== &#x27;string&#x27; || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options &#x26;&#x26; typeof options.maxKeys === &#x27;number&#x27;) {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys &#x3c;= 0 means that we should not limit keys count
+  if (maxKeys &#x3e; 0 &#x26;&#x26; len &#x3e; maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i &#x3c; len; ++i) {
+    var x = qs[i].replace(regexp, &#x27;%20&#x27;),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx &#x3e;= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = &#x27;&#x27;;
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.querystring.index.stringify" id="apidoc.element.querystring.index.stringify">
+        function <span class="apidocSignatureSpan">querystring.index.</span>stringify
+        <span class="apidocSignatureSpan">(obj, sep, eq, name)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">stringify = function (obj, sep, eq, name) {
+  sep = sep || &#x27;&#x26;&#x27;;
+  eq = eq || &#x27;=&#x27;;
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === &#x27;object&#x27;) {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return &#x27;&#x27;;
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
